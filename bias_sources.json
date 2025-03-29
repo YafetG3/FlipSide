@@ -1,0 +1,22 @@
+{
+    "cnn.com": "left",
+    "foxnews.com": "right",
+    "msnbc.com": "left",
+    "huffpost.com": "left",
+    "breitbart.com": "right",
+    "dailywire.com": "right",
+    "reuters.com": "center",
+    "apnews.com": "center",
+    "bloomberg.com": "center",
+    "wsj.com": "center",
+    "vox.com": "left",
+    "newsmax.com": "right",
+    "thehill.com": "center",
+    "politico.com": "center",
+    "theguardian.com": "left",
+    "dailymail.co.uk": "right",
+    "nytimes.com": "left",
+    "washingtonpost.com": "left",
+    "usatoday.com": "center",
+    "abcnews.go.com": "center"
+} 
