@@ -10,7 +10,7 @@ client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def analyze_article(article_text: str) -> Dict[str, List[str]]:
     """
-    Analyze article content using GPT-4 to generate summary and pros/cons.
+    Analyze article content using GPT-3.5-turbo to generate summary and pros/cons.
     """
     prompt = f"""
     Analyze the following article and provide:
@@ -31,7 +31,7 @@ def analyze_article(article_text: str) -> Dict[str, List[str]]:
     
     try:
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are an impartial political news analyzer."},
                 {"role": "user", "content": prompt}
@@ -46,7 +46,7 @@ def analyze_article(article_text: str) -> Dict[str, List[str]]:
 
 def extract_topic(article_text: str) -> str:
     """
-    Extract the main topic/theme of the article using GPT-4.
+    Extract the main topic/theme of the article using GPT-3.5-turbo.
     """
     prompt = f"""
     Extract the main topic or theme of the following article in 2-3 words:
@@ -59,7 +59,7 @@ def extract_topic(article_text: str) -> str:
     
     try:
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are a topic extractor."},
                 {"role": "user", "content": prompt}

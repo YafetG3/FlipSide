@@ -1,10 +1,17 @@
-from typing import Dict, Optional
+import os
 import requests
+from typing import Dict, Optional
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
+
+# Load .env file
+load_dotenv()
 
 class NewsAPI:
-    def __init__(self, api_key: str):
-        self.api_key = api_key
+    def __init__(self):
+        self.api_key = os.getenv("NEWS_API_KEY")
+        if not self.api_key:
+            raise ValueError("NEWS_API_KEY is not set in the environment.")
         self.base_url = "https://newsapi.org/v2"
 
     def search_articles(self, query: str, bias: str, days: int = 7) -> Optional[Dict]:
@@ -15,11 +22,11 @@ class NewsAPI:
             # Calculate date range
             end_date = datetime.now()
             start_date = end_date - timedelta(days=days)
-            
+
             # Format dates for API
             from_date = start_date.strftime("%Y-%m-%d")
             to_date = end_date.strftime("%Y-%m-%d")
-            
+
             # Build query
             params = {
                 "q": query,
@@ -29,13 +36,13 @@ class NewsAPI:
                 "sortBy": "relevancy",
                 "apiKey": self.api_key
             }
-            
+
             # Make API request
             response = requests.get(f"{self.base_url}/everything", params=params)
             response.raise_for_status()
-            
+
             data = response.json()
-            
+
             if data["status"] == "ok" and data["articles"]:
                 # Return the first article that matches our criteria
                 for article in data["articles"]:
@@ -47,9 +54,9 @@ class NewsAPI:
                             "source": article["source"]["name"],
                             "bias": bias
                         }
-            
+
             return None
-            
+
         except Exception as e:
             print(f"Error searching articles: {str(e)}")
             return None
@@ -60,13 +67,14 @@ class NewsAPI:
         This is a simplified version - in production, you'd want a more comprehensive mapping.
         """
         source_name = source_name.lower()
-        
+
         if target_bias == "left":
             return any(name in source_name for name in ["cnn", "msnbc", "huffpost", "vox"])
         elif target_bias == "right":
             return any(name in source_name for name in ["fox", "breitbart", "daily wire", "newsmax"])
         else:  # center
             return any(name in source_name for name in ["reuters", "ap", "bloomberg", "wsj"])
+
 
 # For development/testing, we can use a stub version
 def get_stub_counter_article(topic: str, bias: str) -> Dict:
@@ -79,4 +87,4 @@ def get_stub_counter_article(topic: str, bias: str) -> Dict:
         "url": "https://example.com/counter-article",
         "source": "Example News",
         "bias": bias
-    } 
+    }

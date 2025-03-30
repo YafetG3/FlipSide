@@ -73,9 +73,13 @@ function App() {
         body: JSON.stringify({ url }),
       })
 
-      if (!response.ok) throw new Error('Failed to analyze article')
-
       const data = await response.json()
+      
+      if (!response.ok) {
+        // Display the detailed error message from the backend
+        throw new Error(data.detail || 'Failed to analyze article')
+      }
+
       setResults(data)
     } catch (err) {
       setError(err.message)
@@ -135,10 +139,19 @@ function App() {
         )}
 
         {results && (
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 gap-6">
             {/* Original Article */}
             <div className="bg-white p-6 rounded-lg shadow">
               <h2 className="text-xl font-semibold mb-4">Original Article</h2>
+              <div className="mb-4">
+                <span className={`inline-block px-3 py-1 rounded-full text-sm ${
+                  results.original_article.bias === 'left' ? 'bg-blue-100 text-blue-800' :
+                  results.original_article.bias === 'right' ? 'bg-red-100 text-red-800' :
+                  'bg-gray-100 text-gray-800'
+                }`}>
+                  {results.original_article.bias.charAt(0).toUpperCase() + results.original_article.bias.slice(1)}-leaning
+                </span>
+              </div>
               <h3 className="text-lg font-medium mb-2">
                 {results.original_article.title}
               </h3>
@@ -174,20 +187,6 @@ function App() {
                     ))}
                   </ul>
                 </div>
-              </div>
-            </div>
-
-            {/* Counter Article */}
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold mb-4">Counter Article</h2>
-              <h3 className="text-lg font-medium mb-2">
-                {results.counter_article.title}
-              </h3>
-              <p className="text-sm text-gray-600 mb-4">
-                Source: {results.counter_article.source}
-              </p>
-              <div className="prose max-w-none">
-                {results.counter_article.content}
               </div>
             </div>
           </div>
