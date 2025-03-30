@@ -109,19 +109,19 @@ function App() {
         </h1>
 
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto mb-8">
-          <div className="flex gap-4">
+          <div className="box4">
             <input
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               placeholder="Paste a news article URL..."
-              className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="input-field"
               required
             />
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+              className="submit-button"
             >
               {loading ? 'Analyzing...' : 'See the Other Side'}
             </button>
