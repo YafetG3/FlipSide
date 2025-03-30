@@ -3,7 +3,10 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  background-color: aliceblue;
+}
+
+body {
+  background-color: #e3f4f6;
 }
 
 .logo {
