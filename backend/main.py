@@ -114,6 +114,7 @@ def analyze_url_article(url: str) -> dict:
                 "title": counter_article_data["title"],
                 "content": counter_article_data["content"],
                 "source": counter_article_data["source"],
+                "url": counter_article_data.get("url"),
                 "ai_analysis": counter_analysis
             }
 

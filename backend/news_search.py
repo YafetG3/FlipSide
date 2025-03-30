@@ -71,9 +71,10 @@ class NewsAPI:
         source_name = source_name.lower()
 
         bias_sources = {
-            "left": ["cnn", "msnbc", "huffpost", "vox", "theguardian", "nytimes"],
-            "right": ["fox", "breitbart", "daily wire", "newsmax", "washingtonexaminer"],
-            "center": ["reuters", "ap", "bloomberg", "wsj"]
+            "left": ["cnn", "msnbc", "huffpost", "vox",'apnews','buzzfeed','dailybeast','democracynow'
+                                                 ,'washingtonpost','nytimes','politico'],
+            "right": ["fox", "breitbart", "daily wire", "newsmax","dailywire","dailymail","nationalreview","newsmax","thedailycaller","thefederalist","washingtonfreebeacon"],
+            "center": ['reuters','bbc','forbes','thehill','reason']
         }
 
         for keyword in bias_sources.get(target_bias, []):

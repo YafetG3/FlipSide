@@ -191,6 +191,16 @@ function App() {
                 <h3 style={{ color: '#51BBFE' }}>Article from Other Perspective</h3>
                 <h4>{results.counter_article.title}</h4>
                 <p>Source: {results.counter_article.source}</p>
+                {results.counter_article.url && (
+                    <a
+                      href={results.counter_article.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 underline inline-block mb-2"
+                    >
+                      Read full article ↗
+                    </a>
+                  )}
                 <div>{results.counter_article.content}</div>
 
                 <h3>Summary</h3>
