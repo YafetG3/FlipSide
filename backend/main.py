@@ -22,7 +22,7 @@ app = FastAPI(title="FlipSide API", description="API for analyzing political new
 # Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:5174", "http://localhost:5183"],  # Added port 5174
+    allow_origins=["http://localhost:5173", "http://localhost:5174", "http://localhost:5183", "https://localhost:5176", "https://localhost:5175"],  # Added port 5174
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

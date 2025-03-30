@@ -3,6 +3,7 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  color: black; /* Set default text color */
 }
 
 .prompt-wrapper {
@@ -20,6 +21,7 @@ body {
   position: relative;
   min-height: 100vh;
 }
+
 
 body::after {
   content: '';
@@ -152,6 +154,7 @@ body::after {
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
+  color: black; /* Ensure black text in original article */
 }
 
 /* AI Analysis section with two columns */
@@ -177,16 +180,18 @@ body::after {
   min-width: 400px;    /* don't go narrower than this */
   max-width: 700px;    /* optional: prevent getting too wide */
   box-sizing: border-box;
+  color: black; /* Ensure black text in analysis columns */
 }
 
 /* Optional: Styling for headers and lists */
 .analysis-column h3 {
   margin-bottom: 0.75rem;
+  color: black;
 }
 
 .analysis-column h3:first-child {
   font-size: 2rem;
-  color: #51BBFE;
+  color: #51BBFE; /* Keep blue color for specific headers */
   font-weight: 600;
 }
 
@@ -194,4 +199,10 @@ body::after {
   padding-left: 1.25rem;
   list-style-type: disc;
   margin-top: 0.5rem;
+  color: black;
+}
+
+/* Ensure paragraphs are black */
+.analysis-column p {
+  color: black;
 }

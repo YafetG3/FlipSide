@@ -78,13 +78,11 @@ function App() {
       const data = await response.json()
       
       if (!response.ok) {
-        // Display the detailed error message from the backend
         throw new Error(data.detail || 'Failed to analyze article')
       }
 
       setResults(data)
-      
-      // Add smooth scroll to results
+
       setTimeout(() => {
         if (resultsRef.current) {
           resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -100,9 +98,9 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4">
       <div className="max-w-7xl mx-auto">
-      <div className="prompt-spacer" aria-hidden="true"></div>
-      <div ref={promptRef} className="prompt-wrapper">
-        <h1 className="text-4xl font-bold text-center mb-4" style={{ color: '#1F1A38' }}>
+        <div className="prompt-spacer" aria-hidden="true"></div>
+        <div ref={promptRef} className="prompt-wrapper">
+          <h1 className="text-4xl font-bold text-center mb-4" style={{ color: '#1F1A38' }}>
             Show me {dynamicText.includes('FlipSide') ? (
               <>
                 {dynamicText.split('FlipSide')[0]}
@@ -122,26 +120,27 @@ function App() {
               }}
             ></span>
           </h1>
-            <form onSubmit={handleSubmit} className="max-w-2xl mx-auto mb-8">
-              <div className="box4">
-                <input
-                  type="url"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  placeholder="Paste a news article URL..."
-                  className="input-field"
-                  required
-                />
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="submit-button"
-                >
-                  {loading ? 'Analyzing...' : 'See the Other Side'}
-                </button>
-              </div>
-            </form>
+          <form onSubmit={handleSubmit} className="max-w-2xl mx-auto mb-8">
+            <div className="box4">
+              <input
+                type="url"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="Paste a news article URL..."
+                className="input-field"
+                required
+              />
+              <button
+                type="submit"
+                disabled={loading}
+                className="submit-button"
+              >
+                {loading ? 'Analyzing...' : 'See the Other Side'}
+              </button>
+            </div>
+          </form>
         </div>
+
         {error && (
           <div className="max-w-2xl mx-auto p-4 bg-red-100 text-red-700 rounded-lg mb-8">
             {error}
@@ -184,28 +183,30 @@ function App() {
               </div>
 
               {/* Right Column - Counter Article */}
-              <div className="analysis-column">
-                <h3>{results.counter_article.title}</h3>
-                <p>Source: {results.counter_article.source}</p>
-                <div>{results.counter_article.content}</div>
-              </div>
+              {results.counter_article && (
+                <div className="analysis-column">
+                  <h3>{results.counter_article.title}</h3>
+                  <p>Source: {results.counter_article.source}</p>
+                  <div>{results.counter_article.content}</div>
+                </div>
+              )}
             </div>
+
             <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-  <button
-    onClick={() => {
-      promptRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start', // will scroll and now show proper top spacing
-      })
-    }}
-    className="submit-button"
-  >
-    Back to Prompt
-  </button>
-</div>
+              <button
+                onClick={() => {
+                  promptRef.current.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                  })
+                }}
+                className="submit-button"
+              >
+                Back to Prompt
+              </button>
+            </div>
           </div>
         )}
-
       </div>
     </div>
   )
