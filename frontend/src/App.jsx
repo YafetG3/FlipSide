@@ -77,6 +77,14 @@ function App() {
 
       const data = await response.json()
       setResults(data)
+      
+      // Add smooth scroll to results
+      setTimeout(() => {
+        const resultsElement = document.querySelector('.grid')
+        if (resultsElement) {
+          resultsElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      }, 100) // Small delay to ensure results are rendered
     } catch (err) {
       setError(err.message)
     } finally {
