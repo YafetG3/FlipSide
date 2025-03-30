@@ -88,8 +88,7 @@ function App() {
     <div className="min-h-screen bg-gray-100 py-8 px-4">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-center mb-4" style={{ color: '#1F1A38' }}>
-          Show me{' '}
-          {dynamicText.includes('FlipSide') ? (
+          Show me {dynamicText.includes('FlipSide') ? (
             <>
               {dynamicText.split('FlipSide')[0]}
               <span style={{ color: '#51BBFE' }}>FlipSide</span>
