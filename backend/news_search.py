@@ -47,7 +47,6 @@ class NewsAPI:
                             "biasMatch": True
                         }
 
-                    # Save the first article as fallback if nothing matches exactly
                     if not best_match:
                         best_match = {
                             "title": article["title"],
@@ -55,10 +54,10 @@ class NewsAPI:
                             "url": article["url"],
                             "source": article["source"]["name"],
                             "bias": source_bias,
-                            "biasMatch": False  # Bias doesn't match exactly
+                            "biasMatch": False 
                         }
 
-                # If no exact match, return best available
+               
                 if best_match:
                     return best_match
             return None
@@ -82,7 +81,6 @@ class NewsAPI:
                 return True
         return False
     
-# For development/testing, we can use a stub version
 def get_stub_counter_article(topic: str, bias: str) -> Dict:
     """
     Return a stub counter article for development/testing.

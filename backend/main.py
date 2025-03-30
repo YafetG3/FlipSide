@@ -13,7 +13,6 @@ from urllib.parse import urlparse
 from news_search import NewsAPI
 from scraper import extract_article_content
 
-# Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -21,7 +20,6 @@ load_dotenv()
 
 app = FastAPI(title="FlipSide API", description="API for analyzing political news articles")
 
-# Enable CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173", "http://localhost:5174", "http://localhost:5183", "https://localhost:5176", "https://localhost:5175", "hoosflips.tech"],  # Added port 5174
@@ -61,24 +59,23 @@ def analyze_url_article(url: str) -> dict:
     try:
         logger.info(f"Starting analysis for URL: {url}")
         
-        # Step 1: Extract content
+
         article = extract_article_content(url)
         logger.info("Successfully extracted article content")
         
-        # Step 2: Get bias from domain
+
         bias = get_source_bias(url)
         logger.info(f"Determined source bias: {bias}")
         
-        # Step 3: Analyze with GPT
+
         ai_analysis_str = analyze_article(article["content"])
         ai_analysis = json.loads(ai_analysis_str)
         logger.info("Successfully completed AI analysis")
         
-        # Step 4: Extract topic
         topic = extract_topic(article["content"])
         logger.info(f"Extracted topic: {topic}")
         
-        # Step 5: Search for counterpoint article
+
         news_api = NewsAPI(api_key=os.getenv("NEWS_API_KEY"))
         opposite_bias = "left" if bias == "right" else "right"
 
@@ -87,18 +84,16 @@ def analyze_url_article(url: str) -> dict:
         counter_analysis = None
 
         if counter_article_data:
-            print(f"✅ Found counter article: {counter_article_data['title']}")
+            print(f"Found counter article: {counter_article_data['title']}")
             try:
-                # Analyze counter article content
                 counter_analysis_str = analyze_article(counter_article_data["content"])
                 counter_analysis = json.loads(counter_analysis_str)
-                logger.info("✅ Completed counter article AI analysis")
+                logger.info("Completed counter article AI analysis")
             except Exception as e:
-                logger.warning(f"⚠️ Failed to analyze counter article: {e}")
+                logger.warning(f"Failed to analyze counter article: {e}")
         else:
-            print("❌ No counterpoint article found.")
+            print("No counterpoint article found.")
 
-        # Step 6: Return results
         result = {
             "original_article": {
                 "title": article["title"],
@@ -134,12 +129,10 @@ async def analyze_article_endpoint(request: ArticleRequest):
     Analyze a news article and return its content and AI analysis.
     """
     try:
-        # Add more detailed logging
         logger.info(f"Starting analysis for URL: {request.url}")
         
         result = analyze_url_article(request.url)
         
-        # Validate the result structure
         if not result or 'original_article' not in result or 'ai_analysis' not in result:
             raise HTTPException(
                 status_code=500,
@@ -149,7 +142,6 @@ async def analyze_article_endpoint(request: ArticleRequest):
         return result
     except Exception as e:
         logger.error(f"Failed to analyze article: {str(e)}")
-        # Return more specific error message
         raise HTTPException(
             status_code=500,
             detail=f"Failed to analyze article: {str(e)}"

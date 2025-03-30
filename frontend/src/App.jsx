@@ -17,7 +17,7 @@ function App() {
   const resultsRef = useRef(null)
   const promptRef = useRef(null)
 
-  // blinking cursor effect
+ 
   useEffect(() => {
     const interval = setInterval(() => {
       setShowCursor(prev => !prev)
@@ -25,7 +25,7 @@ function App() {
     return () => clearInterval(interval)
   }, [])
 
-  // typing effect
+
   useEffect(() => {
     const type = () => {
       const fullText = texts[textIndex.current]

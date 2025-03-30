@@ -19,15 +19,12 @@ def get_source_bias(url: str) -> Optional[str]:
     """
     domain = urlparse(url).netloc.lower()
     bias_sources = load_bias_sources()
-    
-    # Remove 'www.' if present
+
     domain = domain.replace('www.', '')
     
-    # Check if domain is in our bias mapping
     if domain in bias_sources:
         return bias_sources[domain]
     
-    # Check common patterns
     # Source for patterns: https://www.allsides.com/media-bias/ratings
     if any(domain.endswith(site) for site in ['foxnews.com', 'breitbart.com', 'dailywire.com','dailymail.com','nationalreview.com','newsmax.com','thedaillycaller.com','thefederalist.com','washingtonfreebeacon.com']):
         return 'right'
@@ -47,4 +44,4 @@ def find_opposing_bias(current_bias: str) -> str:
     elif current_bias == 'right':
         return 'left'
     else:
-        return 'center'  # Default to center if bias is unknown or center 
+        return 'center' 

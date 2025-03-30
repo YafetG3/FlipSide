@@ -5,7 +5,6 @@ import os
 
 load_dotenv(override=True)
 
-# Initialize OpenAI client
 client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def analyze_article(article_text: str) -> Dict[str, List[str]]:
@@ -14,7 +13,7 @@ def analyze_article(article_text: str) -> Dict[str, List[str]]:
     """
     prompt = f"""
     Analyze the following article and provide:
-    1. A concise 3-sentence summary
+    1. A concise 8-10 sentence summary
     2. Three key pros from the article's perspective
     3. Three key cons from the article's perspective
     
