@@ -14,6 +14,8 @@ function App() {
   const textIndex = useRef(0)
   const charIndex = useRef(0)
   const timeoutRef = useRef(null)
+  const resultsRef = useRef(null)
+  const promptRef = useRef(null)
 
   // blinking cursor effect
   useEffect(() => {
@@ -80,11 +82,10 @@ function App() {
       
       // Add smooth scroll to results
       setTimeout(() => {
-        const resultsElement = document.querySelector('.grid')
-        if (resultsElement) {
-          resultsElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        if (resultsRef.current) {
+          resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
         }
-      }, 100) // Small delay to ensure results are rendered
+      }, 100)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -95,47 +96,48 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4">
       <div className="max-w-7xl mx-auto">
+      <div className="prompt-spacer" aria-hidden="true"></div>
+      <div ref={promptRef} className="prompt-wrapper">
         <h1 className="text-4xl font-bold text-center mb-4" style={{ color: '#1F1A38' }}>
-          Show me {dynamicText.includes('FlipSide') ? (
-            <>
-              {dynamicText.split('FlipSide')[0]}
-              <span style={{ color: '#51BBFE' }}>FlipSide</span>
-            </>
-          ) : (
-            dynamicText
-          )}
-          <span
-            className={`inline-block w-[4px] h-[1.2em] bg-[#1F1A38] ml-1 ${
-              showCursor ? 'opacity-100' : 'opacity-0'
-            }`}
-            style={{
-              verticalAlign: 'middle',
-              marginTop: '-4px',
-              borderRadius: '2px',
-            }}
-          ></span>
-        </h1>
-
-        <form onSubmit={handleSubmit} className="max-w-2xl mx-auto mb-8">
-          <div className="box4">
-            <input
-              type="url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              placeholder="Paste a news article URL..."
-              className="input-field"
-              required
-            />
-            <button
-              type="submit"
-              disabled={loading}
-              className="submit-button"
-            >
-              {loading ? 'Analyzing...' : 'See the Other Side'}
-            </button>
-          </div>
-        </form>
-
+            Show me {dynamicText.includes('FlipSide') ? (
+              <>
+                {dynamicText.split('FlipSide')[0]}
+                <span style={{ color: '#51BBFE' }}>FlipSide</span>
+              </>
+            ) : (
+              dynamicText
+            )}
+            <span
+              className={`inline-block w-[4px] h-[1.2em] bg-[#1F1A38] ml-1 ${
+                showCursor ? 'opacity-100' : 'opacity-0'
+              }`}
+              style={{
+                verticalAlign: 'middle',
+                marginTop: '-4px',
+                borderRadius: '2px',
+              }}
+            ></span>
+          </h1>
+            <form onSubmit={handleSubmit} className="max-w-2xl mx-auto mb-8">
+              <div className="box4">
+                <input
+                  type="url"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  placeholder="Paste a news article URL..."
+                  className="input-field"
+                  required
+                />
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="submit-button"
+                >
+                  {loading ? 'Analyzing...' : 'See the Other Side'}
+                </button>
+              </div>
+            </form>
+        </div>
         {error && (
           <div className="max-w-2xl mx-auto p-4 bg-red-100 text-red-700 rounded-lg mb-8">
             {error}
@@ -143,63 +145,63 @@ function App() {
         )}
 
         {results && (
-          <div className="grid grid-cols-3 gap-6">
-            {/* Original Article */}
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold mb-4">Original Article</h2>
-              <h3 className="text-lg font-medium mb-2">
-                {results.original_article.title}
-              </h3>
-              <p className="text-sm text-gray-600 mb-4">
-                Source: {results.original_article.source}
-              </p>
-              <div className="prose max-w-none">
-                {results.original_article.content}
-              </div>
+          <div ref={resultsRef}>
+            {/* Original Article - Centered */}
+            <div className="original-article">
+              <h2>Original Article</h2>
+              <h3>{results.original_article.title}</h3>
+              <p>Source: {results.original_article.source}</p>
+              <div>{results.original_article.content}</div>
             </div>
 
-            {/* AI Analysis */}
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold mb-4">AI Analysis</h2>
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-medium mb-2">Summary</h3>
-                  <p>{results.ai_analysis.summary}</p>
-                </div>
-                <div>
-                  <h3 className="font-medium mb-2">Pros</h3>
-                  <ul className="list-disc pl-5">
-                    {results.ai_analysis.pros.map((pro, index) => (
-                      <li key={index}>{pro}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="font-medium mb-2">Cons</h3>
-                  <ul className="list-disc pl-5">
-                    {results.ai_analysis.cons.map((con, index) => (
-                      <li key={index}>{con}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
+            {/* AI Analysis Header */}
+            <h2 className="ai-header">AI ANALYSIS</h2>
 
-            {/* Counter Article */}
-            <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-xl font-semibold mb-4">Counter Article</h2>
-              <h3 className="text-lg font-medium mb-2">
-                {results.counter_article.title}
-              </h3>
-              <p className="text-sm text-gray-600 mb-4">
-                Source: {results.counter_article.source}
-              </p>
-              <div className="prose max-w-none">
-                {results.counter_article.content}
+            {/* Two Column Layout */}
+            <div className="analysis-section">
+              {/* Left Column - AI Analysis */}
+              <div className="analysis-column">
+                <h3>Summary</h3>
+                <p>{results.ai_analysis.summary}</p>
+
+                <h3>Pros</h3>
+                <ul>
+                  {results.ai_analysis.pros.map((pro, index) => (
+                    <li key={index}>{pro}</li>
+                  ))}
+                </ul>
+
+                <h3>Cons</h3>
+                <ul>
+                  {results.ai_analysis.cons.map((con, index) => (
+                    <li key={index}>{con}</li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Right Column - Counter Article */}
+              <div className="analysis-column">
+                <h3>{results.counter_article.title}</h3>
+                <p>Source: {results.counter_article.source}</p>
+                <div>{results.counter_article.content}</div>
               </div>
             </div>
+            <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+  <button
+    onClick={() => {
+      promptRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start', // will scroll and now show proper top spacing
+      })
+    }}
+    className="submit-button"
+  >
+    Back to Prompt
+  </button>
+</div>
           </div>
         )}
+
       </div>
     </div>
   )
