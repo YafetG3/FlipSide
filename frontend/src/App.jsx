@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 function App() {
@@ -6,6 +6,63 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState(null)
   const [error, setError] = useState(null)
+  const [dynamicText, setDynamicText] = useState('')
+  const [currentTextIndex, setCurrentTextIndex] = useState(0)
+  const [isTyping, setIsTyping] = useState(true)
+  const [showCursor, setShowCursor] = useState(true)
+
+  const texts = ['...a different side', '...another angle', 'the FlipSide']
+
+  useEffect(() => {
+    // Blinking cursor effect
+    const cursorInterval = setInterval(() => {
+      setShowCursor(prev => !prev)
+    }, 500)
+
+    return () => clearInterval(cursorInterval)
+  }, [])
+
+  useEffect(() => {
+    let timeoutId
+    let currentIndex = 0
+    let currentText = ''
+    let isDeleting = false
+
+    const typeText = () => {
+      const fullText = texts[currentIndex]
+      
+      if (isDeleting) {
+        currentText = fullText.substring(0, currentText.length - 1)
+        setDynamicText(currentText)
+        if (currentText === '') {
+          isDeleting = false
+          currentIndex = (currentIndex + 1) % texts.length
+        }
+      } else {
+        currentText = fullText.substring(0, currentText.length + 1)
+        setDynamicText(currentText)
+        if (currentText === fullText) {
+          // If we've reached "the FlipSide", stop the animation
+          if (currentText === 'the FlipSide') {
+            return
+          }
+          // Add 2 second pause before deleting
+          timeoutId = setTimeout(() => {
+            isDeleting = true
+            typeText()
+          }, 2000)
+          return
+        }
+      }
+
+      const typingSpeed = isDeleting ? 50 : 100
+      timeoutId = setTimeout(typeText, typingSpeed)
+    }
+
+    typeText()
+
+    return () => clearTimeout(timeoutId)
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -37,8 +94,9 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-100 py-8 px-4">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
-          FlipSide
+        <h1 className="text-4xl font-bold text-center mb-4 text-gray-800">
+          Show me {dynamicText}
+          <span className={`inline-block w-[4px] h-[1.2em] bg-gray-800 ml-1 ${showCursor ? 'opacity-100' : 'opacity-0'}`} style={{ verticalAlign: 'middle', marginTop: '-4px', borderRadius: '2px' }}></span>
         </h1>
         
         <form onSubmit={handleSubmit} className="max-w-2xl mx-auto mb-8">
