@@ -28,11 +28,12 @@ def get_source_bias(url: str) -> Optional[str]:
         return bias_sources[domain]
     
     # Check common patterns
-    if any(domain.endswith(site) for site in ['foxnews.com', 'breitbart.com', 'dailywire.com']):
+    # Source for patterns: https://www.allsides.com/media-bias/ratings
+    if any(domain.endswith(site) for site in ['foxnews.com', 'breitbart.com', 'dailywire.com','dailymail.com','nationalreview.com','newsmax.com','thedaillycaller.com','thefederalist.com','washingtonfreebeacon.com']):
         return 'right'
-    elif any(domain.endswith(site) for site in ['cnn.com', 'msnbc.com', 'huffpost.com']):
+    elif any(domain.endswith(site) for site in ['cnn.com', 'msnbc.com', 'huffpost.com','apnews.com','buzzfeed.com','dailybeast.com','democracynow.org' ,'nytimes.com','politico.com','vox.com']):
         return 'left'
-    elif any(domain.endswith(site) for site in ['reuters.com', 'apnews.com', 'bloomberg.com']):
+    elif any(domain.endswith(site) for site in ['reuters.com', 'bloomberg.com','bbc.com','forbes.com','thehill.com']):
         return 'center'
     
     return None
