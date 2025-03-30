@@ -145,10 +145,19 @@ body::after {
   gap: 1rem;
 }
 
-/* Centered original article block */
+.section-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  color: #1F1A38;
+}
+
+/* Original article block */
 .original-article {
   max-width: 700px;
-  margin: 20vh auto 2rem;
+  margin: 0 auto 2rem;
   background-color: white;
   padding: 1.5rem;
   border-radius: 12px;
@@ -162,7 +171,7 @@ body::after {
   display: flex;
   justify-content: center;
   gap: 2rem;
-  margin-top: 2rem;
+  margin-top: 0;  /* Remove top margin since title is now above */
   flex-wrap: wrap;
 }
 

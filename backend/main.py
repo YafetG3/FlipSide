@@ -102,7 +102,6 @@ def analyze_url_article(url: str) -> dict:
         result = {
             "original_article": {
                 "title": article["title"],
-                "content": article["content"],
                 "source": article["source"],
                 "bias": bias,
                 "topic": topic

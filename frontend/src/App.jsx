@@ -149,16 +149,19 @@ function App() {
 
         {results && (
           <div ref={resultsRef}>
-            {/* Original Article - Centered */}
+            {/* Original Article Title */}
+            <h2 className="section-title">Original Article</h2>
+            
+            {/* Original Article Content */}
             <div className="original-article">
-              <h2>Original Article</h2>
               <h3>{results.original_article.title}</h3>
               <p>Source: {results.original_article.source}</p>
+              <h3 style={{ marginTop: '0.5rem' }}>{results.original_article.bias?.charAt(0).toUpperCase() + results.original_article.bias?.slice(1).toLowerCase()}-Leaning</h3>
               <div>{results.original_article.content}</div>
             </div>
 
             {/* AI Analysis Header */}
-            <h2 className="ai-header">AI ANALYSIS</h2>
+            <h2 className="section-title">AI Analysis</h2>
 
             {/* Two Column Layout */}
             <div className="analysis-section">
@@ -167,14 +170,14 @@ function App() {
                 <h3>Summary</h3>
                 <p>{results.ai_analysis.summary}</p>
 
-                <h3>Pros</h3>
+                <h3>Points for Supporting</h3>
                 <ul>
                   {results.ai_analysis.pros.map((pro, index) => (
                     <li key={index}>{pro}</li>
                   ))}
                 </ul>
 
-                <h3>Cons</h3>
+                <h3>Points for Rejecting</h3>
                 <ul>
                   {results.ai_analysis.cons.map((con, index) => (
                     <li key={index}>{con}</li>
@@ -185,7 +188,7 @@ function App() {
               {/* Right Column - Counter Article */}
               {results.counter_article && results.counter_article.ai_analysis ? (
               <div className="analysis-column">
-                <h3 style={{ color: '#51BBFE' }}>Counterpoint Article</h3>
+                <h3 style={{ color: '#51BBFE' }}>Article from Other Perspective</h3>
                 <h4>{results.counter_article.title}</h4>
                 <p>Source: {results.counter_article.source}</p>
                 <div>{results.counter_article.content}</div>
@@ -193,14 +196,14 @@ function App() {
                 <h3>Summary</h3>
                 <p>{results.counter_article.ai_analysis.summary}</p>
 
-                <h3>Pros</h3>
+                <h3>Counterpoints</h3>
                 <ul>
                   {results.counter_article.ai_analysis.pros.map((pro, index) => (
                     <li key={index}>{pro}</li>
                   ))}
                 </ul>
 
-                <h3>Cons</h3>
+                <h3>Shortcomings</h3>
                 <ul>
                   {results.counter_article.ai_analysis.cons.map((con, index) => (
                     <li key={index}>{con}</li>
