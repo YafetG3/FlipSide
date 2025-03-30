@@ -10,6 +10,8 @@ import os
 import json
 import logging
 from urllib.parse import urlparse
+from news_search import NewsAPI
+from scraper import extract_article_content
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -34,7 +36,8 @@ class ArticleRequest(BaseModel):
 class ArticleAnalysis(BaseModel):
     original_article: dict
     ai_analysis: dict
-
+    counter_article: Optional[dict] = None
+     
 def get_source_bias(url: str) -> str:
     """
     Determine the bias of a news source based on its domain.
@@ -75,8 +78,28 @@ def analyze_url_article(url: str) -> dict:
         topic = extract_topic(article["content"])
         logger.info(f"Extracted topic: {topic}")
         
-        # Final structured response
-        return {
+        # Step 5: Search for counterpoint article
+        news_api = NewsAPI(api_key=os.getenv("NEWS_API_KEY"))
+        opposite_bias = "left" if bias == "right" else "right"
+
+        print(f"🔍 Searching for counter article on topic: {topic}, with bias: {opposite_bias}")
+        counter_article_data = news_api.search_articles(topic, opposite_bias)
+        counter_analysis = None
+
+        if counter_article_data:
+            print(f"✅ Found counter article: {counter_article_data['title']}")
+            try:
+                # Analyze counter article content
+                counter_analysis_str = analyze_article(counter_article_data["content"])
+                counter_analysis = json.loads(counter_analysis_str)
+                logger.info("✅ Completed counter article AI analysis")
+            except Exception as e:
+                logger.warning(f"⚠️ Failed to analyze counter article: {e}")
+        else:
+            print("❌ No counterpoint article found.")
+
+        # Step 6: Return results
+        result = {
             "original_article": {
                 "title": article["title"],
                 "content": article["content"],
@@ -84,12 +107,23 @@ def analyze_url_article(url: str) -> dict:
                 "bias": bias,
                 "topic": topic
             },
-            "ai_analysis": ai_analysis
+            "ai_analysis": ai_analysis,
         }
+
+        if counter_article_data and counter_analysis:
+            result["counter_article"] = {
+                "title": counter_article_data["title"],
+                "content": counter_article_data["content"],
+                "source": counter_article_data["source"],
+                "ai_analysis": counter_analysis
+            }
+
+        return result
+
     except Exception as e:
         logger.error(f"Error analyzing article: {str(e)}")
         raise
-
+    
 @app.get("/")
 async def root():
     return {"message": "Welcome to FlipSide API"}

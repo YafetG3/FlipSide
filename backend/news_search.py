@@ -1,33 +1,20 @@
-import os
-import requests
 from typing import Dict, Optional
+import requests
 from datetime import datetime, timedelta
-from dotenv import load_dotenv
-
-# Load .env file
-load_dotenv()
+from bias_utils import get_source_bias
 
 class NewsAPI:
-    def __init__(self):
-        self.api_key = os.getenv("NEWS_API_KEY")
-        if not self.api_key:
-            raise ValueError("NEWS_API_KEY is not set in the environment.")
+    def __init__(self, api_key: str):
+        self.api_key = api_key
         self.base_url = "https://newsapi.org/v2"
 
     def search_articles(self, query: str, bias: str, days: int = 7) -> Optional[Dict]:
-        """
-        Search for articles matching the query from sources with the specified bias.
-        """
         try:
-            # Calculate date range
             end_date = datetime.now()
             start_date = end_date - timedelta(days=days)
-
-            # Format dates for API
             from_date = start_date.strftime("%Y-%m-%d")
             to_date = end_date.strftime("%Y-%m-%d")
 
-            # Build query
             params = {
                 "q": query,
                 "from": from_date,
@@ -37,45 +24,63 @@ class NewsAPI:
                 "apiKey": self.api_key
             }
 
-            # Make API request
             response = requests.get(f"{self.base_url}/everything", params=params)
+            #print(f"NewsAPI response status: {response.status_code}")
+            #print(f"NewsAPI response body: {response.text}")
             response.raise_for_status()
 
             data = response.json()
-
             if data["status"] == "ok" and data["articles"]:
-                # Return the first article that matches our criteria
+                best_match = None
+
                 for article in data["articles"]:
-                    if self._matches_bias(article["source"]["name"], bias):
+                    source_url = article.get("url", "")
+                    source_bias = get_source_bias(source_url)
+
+                    if source_bias == bias:
                         return {
                             "title": article["title"],
                             "content": article["description"],
                             "url": article["url"],
                             "source": article["source"]["name"],
-                            "bias": bias
+                            "bias": source_bias,
+                            "biasMatch": True
                         }
 
+                    # Save the first article as fallback if nothing matches exactly
+                    if not best_match:
+                        best_match = {
+                            "title": article["title"],
+                            "content": article["description"],
+                            "url": article["url"],
+                            "source": article["source"]["name"],
+                            "bias": source_bias,
+                            "biasMatch": False  # Bias doesn't match exactly
+                        }
+
+                # If no exact match, return best available
+                if best_match:
+                    return best_match
             return None
 
         except Exception as e:
             print(f"Error searching articles: {str(e)}")
             return None
-
+        
     def _matches_bias(self, source_name: str, target_bias: str) -> bool:
-        """
-        Check if a news source matches the target bias.
-        This is a simplified version - in production, you'd want a more comprehensive mapping.
-        """
         source_name = source_name.lower()
 
-        if target_bias == "left":
-            return any(name in source_name for name in ["cnn", "msnbc", "huffpost", "vox"])
-        elif target_bias == "right":
-            return any(name in source_name for name in ["fox", "breitbart", "daily wire", "newsmax"])
-        else:  # center
-            return any(name in source_name for name in ["reuters", "ap", "bloomberg", "wsj"])
+        bias_sources = {
+            "left": ["cnn", "msnbc", "huffpost", "vox", "theguardian", "nytimes"],
+            "right": ["fox", "breitbart", "daily wire", "newsmax", "washingtonexaminer"],
+            "center": ["reuters", "ap", "bloomberg", "wsj"]
+        }
 
-
+        for keyword in bias_sources.get(target_bias, []):
+            if keyword in source_name:
+                return True
+        return False
+    
 # For development/testing, we can use a stub version
 def get_stub_counter_article(topic: str, bias: str) -> Dict:
     """
@@ -87,4 +92,4 @@ def get_stub_counter_article(topic: str, bias: str) -> Dict:
         "url": "https://example.com/counter-article",
         "source": "Example News",
         "bias": bias
-    }
+    } 

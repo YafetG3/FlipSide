@@ -183,13 +183,36 @@ function App() {
               </div>
 
               {/* Right Column - Counter Article */}
-              {results.counter_article && (
-                <div className="analysis-column">
-                  <h3>{results.counter_article.title}</h3>
-                  <p>Source: {results.counter_article.source}</p>
-                  <div>{results.counter_article.content}</div>
-                </div>
-              )}
+              {results.counter_article && results.counter_article.ai_analysis ? (
+              <div className="analysis-column">
+                <h3 style={{ color: '#51BBFE' }}>Counterpoint Article</h3>
+                <h4>{results.counter_article.title}</h4>
+                <p>Source: {results.counter_article.source}</p>
+                <div>{results.counter_article.content}</div>
+
+                <h3>Summary</h3>
+                <p>{results.counter_article.ai_analysis.summary}</p>
+
+                <h3>Pros</h3>
+                <ul>
+                  {results.counter_article.ai_analysis.pros.map((pro, index) => (
+                    <li key={index}>{pro}</li>
+                  ))}
+                </ul>
+
+                <h3>Cons</h3>
+                <ul>
+                  {results.counter_article.ai_analysis.cons.map((con, index) => (
+                    <li key={index}>{con}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <div className="analysis-column">
+                <p>No counterpoint article found for this topic.</p>
+              </div>
+            )}
+
             </div>
 
             <div style={{ textAlign: 'center', marginTop: '2rem' }}>
