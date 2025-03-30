@@ -69,11 +69,12 @@ class NewsAPI:
         source_name = source_name.lower()
 
         if target_bias == "left":
-            return any(name in source_name for name in ["cnn", "msnbc", "huffpost", "vox"])
+            return any(name in source_name for name in ["cnn", "msnbc", "huffpost", "vox",'apnews','buzzfeed','dailybeast','democracynow'
+                                                ,'washingtonpost','nytimes','politico'])
         elif target_bias == "right":
-            return any(name in source_name for name in ["fox", "breitbart", "daily wire", "newsmax"])
+            return any(name in source_name for name in ["fox", "breitbart", "daily wire", "newsmax","dailywire","dailymail","nationalreview","newsmax","thedailycaller","thefederalist","washingtonfreebeacon"])
         else:  # center
-            return any(name in source_name for name in ["reuters", "ap", "bloomberg", "wsj"])
+            return any(name in source_name for name in ['reuters','bbc','forbes','thehill','reason'])
 
 
 # For development/testing, we can use a stub version

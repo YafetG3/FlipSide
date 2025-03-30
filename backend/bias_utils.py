@@ -32,9 +32,9 @@ def get_source_bias(url: str) -> Optional[str]:
     if any(domain.endswith(site) for site in ['foxnews.com', 'breitbart.com', 'dailywire.com','dailymail.com','nationalreview.com','newsmax.com','thedaillycaller.com','thefederalist.com','washingtonfreebeacon.com']):
         return 'right'
     elif any(domain.endswith(site) for site in ['cnn.com', 'msnbc.com', 'huffpost.com','apnews.com','buzzfeed.com','dailybeast.com','democracynow.org'
-                                                ,'huffingtonpost.com','nytimes.com','politico.com']):
+                                                ,'washingtonpost.com','nytimes.com','politico.com','vox.com']):
         return 'left'
-    elif any(domain.endswith(site) for site in ['reuters.com', 'bloomberg.com','bbc.com','forbes.com','thehill.com']):
+    elif any(domain.endswith(site) for site in ['reuters.com','bbc.com','forbes.com','thehill.com','reason.com']):
         return 'center'
     
     return None
